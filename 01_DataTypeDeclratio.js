@@ -42,3 +42,18 @@ function test() {
 }
 
 test();
+
+// // 1 is True in boolean and 0 is false
+// Boolean(false);      // false
+// Boolean(0);          // false
+// Boolean(-0);         // false
+// Boolean("");         // false
+// Boolean(null);       // false
+// Boolean(undefined);  // false
+// Boolean(NaN);        // false
+
+// Boolean(1);          // true
+// Boolean("Hello");    // true
+// Boolean([]);         // true
+// Boolean({});         // true
+// Boolean("false");    // true
