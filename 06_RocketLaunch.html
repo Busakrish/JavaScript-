@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rocket Launch Control</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #050816;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            width: 420px;
+            padding: 30px;
+            text-align: center;
+            background: #111827;
+            border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        h1 {
+            margin-bottom: 10px;
+        }
+
+        #status {
+            margin: 20px 0;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        #countdown {
+            font-size: 70px;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+
+        #altitude {
+            font-size: 28px;
+            margin: 20px 0;
+        }
+
+        button {
+            padding: 12px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        #launchBtn {
+            background: #22c55e;
+        }
+
+        #cancelBtn {
+            background: #ef4444;
+            color: white;
+        }
+
+        #resetBtn {
+            background: #facc15;
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>🚀 Rocket Control Center</h1>
+
+    <div id="status">System Ready</div>
+
+    <div id="countdown">--</div>
+
+    <div id="altitude">
+        Altitude: 0 km
+    </div>
+
+    <button id="launchBtn">Launch 🚀</button>
+    <button id="cancelBtn" disabled>Abort 🛑</button>
+    <button id="resetBtn">Reset 🔄</button>
+
+</div>
+
+<script>
+    const launchBtn = document.querySelector("#launchBtn");
+const cancelBtn = document.querySelector("#cancelBtn");
+const resetBtn = document.querySelector("#resetBtn");
+
+const statusText = document.querySelector("#status");
+const countdownText = document.querySelector("#countdown");
+const altitudeText = document.querySelector("#altitude");
+
+let countdownTimer = null;
+let launchTimer = null;
+let altitudeTimer = null;
+let missionTimer = null;
+
+let countdown = 10;
+let altitude = 0;
+let missionRunning = false;
+
+function launchRocket() {
+
+    if (missionRunning) {
+        console.log("Mission already running!");
+        return;
+    }
+
+    missionRunning = true;
+
+    countdown = 10;
+    altitude = 0;
+
+    launchBtn.disabled = true;
+    cancelBtn.disabled = false;
+
+    statusText.textContent = "Preparing launch...";
+    countdownText.textContent = countdown;
+    altitudeText.textContent = "Altitude: 0 km";
+
+
+    countdownTimer = setInterval(() => {
+
+        countdown--;
+
+        countdownText.textContent = countdown;
+
+        console.log("Countdown:", countdown);
+
+        if (countdown <= 0) {
+
+            clearInterval(countdownTimer);
+
+            countdownTimer = null;
+
+            statusText.textContent = "🚀 LIFTOFF!";
+
+            countdownText.textContent = "🚀";
+
+            launchTimer = setTimeout(() => {
+
+                startFlight();
+
+                launchTimer = null;
+
+            }, 1000);
+        }
+
+    }, 1000);
+}
+
+function startFlight() {
+
+    statusText.textContent = "Rocket is flying 🚀";
+
+    altitudeTimer = setInterval(() => {
+
+        altitude += 100;
+
+        altitudeText.textContent = `Altitude: ${altitude} km`;
+
+        console.log("Altitude:", altitude);
+
+    }, 1000);
+
+    missionTimer = setTimeout(() => {
+
+        finishMission();
+
+    }, 15000);
+}
+
+
+function abortMission() {
+
+    console.log("Abort requested");
+
+
+    if (countdownTimer !== null) {
+
+        clearInterval(countdownTimer);
+
+        countdownTimer = null;
+    }
+
+    if (launchTimer !== null) {
+
+        clearTimeout(launchTimer);
+
+        launchTimer = null;
+    }
+
+    if (altitudeTimer !== null) {
+
+        clearInterval(altitudeTimer);
+
+        altitudeTimer = null;
+    }
+
+    if (missionTimer !== null) {
+
+        clearTimeout(missionTimer);
+
+        missionTimer = null;
+    }
+
+
+    missionRunning = false;
+
+    launchBtn.disabled = false;
+    cancelBtn.disabled = true;
+
+    statusText.textContent = "🛑 Mission Aborted";
+
+    countdownText.textContent = "--";
+}
+
+function finishMission() {
+
+    console.log("Mission complete!");
+
+    clearInterval(altitudeTimer);
+
+    altitudeTimer = null;
+
+    clearInterval(countdownTimer);
+
+    countdownTimer = null;
+
+    clearTimeout(launchTimer);
+
+    launchTimer = null;
+
+    missionTimer = null;
+
+    missionRunning = false;
+
+    launchBtn.disabled = false;
+    cancelBtn.disabled = true;
+
+    statusText.textContent = "🎉 Mission Complete!";
+
+    countdownText.textContent = "✅";
+}
+
+
+function resetMission() {
+
+    if (countdownTimer !== null) {
+        clearInterval(countdownTimer);
+        countdownTimer = null;
+    }
+
+    if (launchTimer !== null) {
+        clearTimeout(launchTimer);
+        launchTimer = null;
+    }
+
+    if (altitudeTimer !== null) {
+        clearInterval(altitudeTimer);
+        altitudeTimer = null;
+    }
+
+    if (missionTimer !== null) {
+        clearTimeout(missionTimer);
+        missionTimer = null;
+    }
+
+
+    missionRunning = false;
+    countdown = 10;
+    altitude = 0;
+
+    launchBtn.disabled = false;
+    cancelBtn.disabled = true;
+
+    statusText.textContent = "System Ready";
+    countdownText.textContent = "--";
+    altitudeText.textContent = "Altitude: 0 km";
+}
+
+launchBtn.addEventListener("click", launchRocket);
+
+cancelBtn.addEventListener("click", abortMission);
+
+resetBtn.addEventListener("click", resetMission);
+</script>
+
+</body>
+</html>
