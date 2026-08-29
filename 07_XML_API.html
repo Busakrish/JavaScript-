@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chai Aur Code</title>
+    <style>
+        .box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid black;
+            background-color: cadetblue;
+        }
+
+        img {
+            height: 250px;
+        }
+    </style>
+</head>
+
+<body>
+    <button id="btn">Fatch Data</button>
+    <div class="box">
+        <div class="image"></div>
+        <div class="info"></div>
+    </div>
+</body>
+<script>
+    let url = 'https://api.github.com/users/hiteshchoudhary'
+
+
+    const button = document.getElementById('btn');
+    button.addEventListener('click', () => {
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', url);
+        xhr.onreadystatechange = () => {
+            // console.log(xhr.readyState)
+            if (xhr.readyState === 4) {
+                //    console.log(xhr.responseText)
+                let response = JSON.parse(xhr.responseText)
+                let img_url = response.avatar_url;
+                document.querySelector('.image').innerHTML = `<img src=${img_url} src="Hitesh sir"><\img>`
+                document.querySelector('.info').innerHTML = `<h2>${response.login}</h2><p>${response.bio}</p>`
+            }
+        }
+        xhr.send();
+    })
+</script>
+
+</html>
