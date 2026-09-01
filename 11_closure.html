@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lexical Scoping and Closure</title>
+</head>
+<body>
+    <button id="orange">orange</button>
+    <button id="blue">blue</button>
+</body>
+<script>
+    function change(color) {
+        return ()=>document.body.style.backgroundColor = `${color}`;
+    }
+    document.getElementById('orange').onclick = change('orange')
+    document.getElementById('blue').onclick = change('blue')
+</script>
+</html>
